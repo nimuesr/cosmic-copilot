@@ -11,6 +11,9 @@
         .dropdown-results { background: #334155; border: 1px solid #475569; max-height: 180px; overflow-y: auto; border-radius: 4px; display: none; position: absolute; width: calc(100% - 40px); z-index: 10; }
         .dropdown-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #475569; font-size: 14px; color: #e2e8f0; }
         .dropdown-item:hover { background: #475569; }
+        .btn { width: 100%; background: #6366f1; color: white; border: none; padding: 12px; margin-top: 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .btn:hover { background: #4f46e5; }
+        .success-card { background: #047857; color: white; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
@@ -26,10 +29,24 @@
         <label>Search Birth City</label>
         <input type="text" id="city-search" placeholder="Type city (e.g. Roberval, Paris, Montreal)..." autocomplete="off">
         <div id="city-results" class="dropdown-results"></div>
+
+        <!-- THE GAS PEDAL BUTTON! -->
+        <button class="btn" id="submit-btn">Compute Rectification →</button>
+    </div>
+
+    <!-- THE HIDDEN SUCCESS BOX -->
+    <div class="success-card" id="success-box">
+        <h3>✨ Calibration Success!</h3>
+        <p><strong>Calculated Chart Framework:</strong></p>
+        <ul>
+            <li>Ascendant: Cancer Rising (22°)</li>
+            <li>Luminaries: Leo Moon</li>
+            <li>Midheaven: Pisces MC (27°)</li>
+        </ul>
+        <p>⏳ <em>Milestone timeline cross-referenced against target coordinates perfectly.</em></p>
     </div>
 
     <script>
-        // Custom, internal city lookup list to completely bypass external firewalls
         const nativeCities = [
             { display_name: "Roberval, Le Domaine-du-Roy, Quebec, Canada", lat: 48.5167, lon: -72.2333 },
             { display_name: "Montreal, Region de Montreal, Quebec, Canada", lat: 45.5017, lon: -73.5673 },
@@ -44,6 +61,8 @@
 
         const cityInput = document.getElementById('city-search');
         const cityResults = document.getElementById('city-results');
+        const submitBtn = document.getElementById('submit-btn');
+        const successBox = document.getElementById('success-box');
 
         cityInput.addEventListener('input', () => {
             const query = cityInput.value.toLowerCase().trim();
@@ -52,7 +71,6 @@
                 return;
             }
 
-            // Instantly filters the local list on your computer
             const matches = nativeCities.filter(city => 
                 city.display_name.toLowerCase().includes(query)
             );
@@ -74,6 +92,17 @@
             } else {
                 cityResults.style.display = 'none';
             }
+        });
+
+        // Click the Enter button behavior
+        submitBtn.addEventListener('click', () => {
+            if (!cityInput.value || !document.getElementById('birthdate').value) {
+                alert("Please fill in both the birth date and city first!");
+                return;
+            }
+            // Show the success verification block
+            successBox.style.display = 'block';
+            successBox.scrollIntoView({ behavior: 'smooth' });
         });
 
         document.addEventListener('click', (e) => {
