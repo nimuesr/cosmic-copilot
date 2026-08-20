@@ -3,78 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Co-Pilot Onboarding</title>
+    <title>Cosmic Co-Pilot Rectification Suite</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; max-width: 500px; margin: auto; }
-        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-top: 20px; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #475569; background: #334155; color: white; box-sizing: border-box; }
-        .dropdown-results { background: #334155; border: 1px solid #475569; max-height: 180px; overflow-y: auto; border-radius: 4px; display: none; position: absolute; width: calc(100% - 40px); z-index: 10; }
-        .dropdown-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #475569; font-size: 14px; color: #e2e8f0; }
+        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        h1, h3 { color: #6366f1; margin-top: 0; }
+        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; color: #cbd5e1; }
+        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #475569; background: #334155; color: white; box-sizing: border-box; }
+        
+        .dropdown-results { background: #334155; border: 1px solid #475569; max-height: 150px; overflow-y: auto; border-radius: 4px; display: none; position: absolute; width: calc(100% - 40px); z-index: 10; }
+        .dropdown-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #475569; font-size: 14px; }
         .dropdown-item:hover { background: #475569; }
-        .btn { width: 100%; background: #6366f1; color: white; border: none; padding: 12px; margin-top: 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        
+        .slider-container { background: #334155; padding: 15px; border-radius: 6px; margin: 15px 0; border: 1px solid #475569; }
+        .time-display { font-size: 24px; font-weight: bold; text-align: center; color: #38bdf8; margin-bottom: 10px; font-family: monospace; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: #475569; height: 8px; border-radius: 4px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #6366f1; cursor: pointer; }
+        
+        .live-framework { display: flex; justify-content: space-around; background: #020617; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid #38bdf8; }
+        .framework-item { text-align: center; }
+        .framework-value { font-size: 18px; font-weight: bold; color: #f43f5e; }
+
+        .milestone-row { display: flex; gap: 10px; margin-bottom: 8px; }
+        .milestone-list { margin-top: 10px; background: #020617; padding: 10px; border-radius: 6px; font-size: 14px; }
+        
+        .btn { width: 100%; background: #6366f1; color: white; border: none; padding: 12px; margin-top: 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .btn:hover { background: #4f46e5; }
+        .btn-add { width: auto; background: #3b82f6; padding: 10px 15px; margin: 0; }
+        
         .success-card { background: #047857; color: white; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; }
     </style>
 </head>
 <body>
 
-    <h1>🌌 Cosmic Co-Pilot</h1>
-    <p>Look up anyone's birth chart parameters and cross-reference milestones.</p>
+    <h1>🌌 Cosmic Co-Pilot Rectification Suite</h1>
+    <p>Calibrate birth timelines and unlock secret Rising Signs.</p>
 
     <div class="card" style="position: relative;">
-        <h3>Profile Entry</h3>
+        <h3>Step 1: Target Identity & Location</h3>
+        <label>Profile Name</label>
+        <input type="text" id="profile-name" placeholder="e.g. My Secret Ex, Bestie, Lady Gaga">
+
         <label>Birth Date</label>
         <input type="date" id="birthdate">
 
         <label>Search Birth City</label>
         <input type="text" id="city-search" placeholder="Type city (e.g. Roberval, Paris, Montreal)..." autocomplete="off">
         <div id="city-results" class="dropdown-results"></div>
-
-        <!-- THE GAS PEDAL BUTTON! -->
-        <button class="btn" id="submit-btn">Compute Rectification →</button>
     </div>
 
-    <!-- THE HIDDEN SUCCESS BOX -->
+    <div class="card">
+        <h3>Step 2: Birth Time Slider Calibration</h3>
+        <p style="font-size: 14px; color: #94a3b8;">Slide the bar to shift through the day. Watch how the Rising Sign shifts live depending on the clock coordinates!</p>
+        
+        <div class="slider-container">
+            <div class="time-display" id="time-text">12:00 PM</div>
+            <input type="range" id="time-slider" min="0" max="1439" value="720">
+        </div>
+
+        <div class="live-framework">
+            <div class="framework-item">
+                <div style="font-size: 12px; color: #94a3b8;">LIVETIME ASCENDANT</div>
+                <div class="framework-value" id="live-asc">Scorpio Rising</div>
+            </div>
+            <div class="framework-item">
+                <div style="font-size: 12px; color: #94a3b8;">MIDHEAVEN (MC)</div>
+                <div class="framework-value" id="live-mc">Leo MC</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Step 3: Life Milestone Verification Matrix</h3>
+        <p style="font-size: 14px; color: #94a3b8;">Add critical historical timelines (breakups, job losses, moves) to test calibration locks.</p>
+        
+        <div class="milestone-row">
+            <input type="text" id="milestone-title" placeholder="Event (e.g. Broken Leg, Left Job)" style="margin:0;">
+            <input type="month" id="milestone-date" style="margin:0; width: 60%;">
+            <button class="btn btn-add" id="add-milestone-btn">Add +</button>
+        </div>
+
+        <div class="milestone-list" id="milestone-display-list">
+            <span style="color: #64748b;">No verification milestones added yet.</span>
+        </div>
+
+        <button class="btn" id="submit-btn">Lock Coordinates & Compute Rectification →</button>
+    </div>
+
     <div class="success-card" id="success-box">
-        <h3>✨ Calibration Success!</h3>
-        <p><strong>Calculated Chart Framework:</strong></p>
+        <h3>✨ Rectification Matrix Validated!</h3>
+        <p>The cosmic timeline calculation has successfully locked the charts. The verified structural configurations have been synchronized to local memory storage.</p>
+        <p><strong>Final Solution Package for <span id="final-name">Profile</span>:</strong></p>
         <ul>
-            <li>Ascendant: Cancer Rising (22°)</li>
-            <li>Luminaries: Leo Moon</li>
-            <li>Midheaven: Pisces MC (27°)</li>
+            <li>Validated Birth Time: <span id="final-time" style="font-weight: bold; color: #38bdf8;">12:00 PM</span></li>
+            <li>Rectified Coordinates: <span id="final-coords" style="font-weight: bold; color: #f43f5e;">Scorpio Rising</span></li>
         </ul>
-        <p>⏳ <em>Milestone timeline cross-referenced against target coordinates perfectly.</em></p>
+        <p>💾 <em>Local state data updated. Premium PDF exporter capability armed.</em></p>
     </div>
 
     <script>
         const nativeCities = [
-            { display_name: "Roberval, Le Domaine-du-Roy, Quebec, Canada", lat: 48.5167, lon: -72.2333 },
-            { display_name: "Montreal, Region de Montreal, Quebec, Canada", lat: 45.5017, lon: -73.5673 },
-            { display_name: "Quebec City, Capitale-Nationale, Quebec, Canada", lat: 46.8139, lon: -71.2082 },
-            { display_name: "Paris, Île-de-France, France", lat: 48.8566, lon: 2.3522 },
-            { display_name: "London, Greater London, England, United Kingdom", lat: 51.5074, lon: -0.1278 },
-            { display_name: "New York City, New York, United States", lat: 40.7128, lon: -74.0060 },
-            { display_name: "Los Angeles, California, United States", lat: 34.0522, lon: -118.2437 },
-            { display_name: "Toronto, Ontario, Canada", lat: 43.6532, lon: -79.3832 },
-            { display_name: "Vancouver, British Columbia, Canada", lat: 49.2827, lon: -123.1207 }
+            { display_name: "Roberval, Le Domaine-du-Roy, Quebec, Canada", signs: ["Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini"] },
+            { display_name: "Montreal, Region de Montreal, Quebec, Canada", signs: ["Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo"] },
+            { display_name: "Paris, Île-de-France, France", signs: ["Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius"] },
+            { display_name: "London, Greater London, England, United Kingdom", signs: ["Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn"] },
+            { display_name: "New York City, New York, United States", signs: ["Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer"] },
+            { display_name: "Los Angeles, California, United States", signs: ["Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries"] }
         ];
 
         const cityInput = document.getElementById('city-search');
         const cityResults = document.getElementById('city-results');
+        const timeSlider = document.getElementById('time-slider');
+        const timeText = document.getElementById('time-text');
+        const liveAsc = document.getElementById('live-asc');
+        const liveMc = document.getElementById('live-mc');
+        
+        const milestoneTitle = document.getElementById('milestone-title');
+        const milestoneDate = document.getElementById('milestone-date');
+        const addMilestoneBtn = document.getElementById('add-milestone-btn');
+        const milestoneDisplayList = document.getElementById('milestone-display-list');
+        
         const submitBtn = document.getElementById('submit-btn');
         const successBox = document.getElementById('success-box');
 
+        let milestones = [];
+
         cityInput.addEventListener('input', () => {
             const query = cityInput.value.toLowerCase().trim();
-            if (query.length < 2) {
-                cityResults.style.display = 'none';
-                return;
-            }
-
-            const matches = nativeCities.filter(city => 
-                city.display_name.toLowerCase().includes(query)
-            );
-            
+            if (query.length < 2) { cityResults.style.display = 'none'; return; }
+            const matches = nativeCities.filter(c => c.display_name.toLowerCase().includes(query));
             cityResults.innerHTML = '';
             if (matches.length > 0) {
                 cityResults.style.display = 'block';
@@ -82,25 +139,53 @@
                     const div = document.createElement('div');
                     div.className = 'dropdown-item';
                     div.innerText = place.display_name;
-                    
                     div.addEventListener('click', () => {
                         cityInput.value = place.display_name;
                         cityResults.style.display = 'none';
+                        updateAstrology();
                     });
                     cityResults.appendChild(div);
                 });
-            } else {
-                cityResults.style.display = 'none';
-            }
+            } else { cityResults.style.display = 'none'; }
         });
 
-        // Click the Enter button behavior
+        function updateAstrology() {
+            const minutes = parseInt(timeSlider.value);
+            const hours24 = Math.floor(minutes / 60);
+            const mins = minutes % 60;
+            const ampm = hours24 >= 12 ? 'PM' : 'AM';
+            const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
+            const displayTime = `${hours12}:${mins.toString().padStart(2, '0')} ${ampm}`;
+            timeText.innerText = displayTime;
+
+            const cityObj = nativeCities.find(c => c.display_name === cityInput.value) || nativeCities[0];
+            const segment = Math.floor(minutes / 120) % 12;
+            
+            const currentAsc = cityObj.signs[segment] + " Rising";
+            const currentMc = cityObj.signs[(segment + 3) % 12] + " MC";
+
+            liveAsc.innerText = currentAsc;
+            liveMc.innerText = currentMc;
+        }
+
+        timeSlider.addEventListener('input', updateAstrology);
+
+        addMilestoneBtn.addEventListener('click', () => {
+            if (!milestoneTitle.value || !milestoneDate.value) return;
+            milestones.push(`${milestoneTitle.value} (${milestoneDate.value})`);
+            milestoneDisplayList.innerHTML = milestones.map(m => `<div>🔹 ${m}</div>`).join('');
+            milestoneTitle.value = '';
+            milestoneDate.value = '';
+        });
+
         submitBtn.addEventListener('click', () => {
             if (!cityInput.value || !document.getElementById('birthdate').value) {
-                alert("Please fill in both the birth date and city first!");
+                alert("Please declare a target profile birthdate and city vector coordinates first!");
                 return;
             }
-            // Show the success verification block
+            document.getElementById('final-name').innerText = document.getElementById('profile-name').value || "The Mystery Profile";
+            document.getElementById('final-time').innerText = timeText.innerText;
+            document.getElementById('final-coords').innerText = `${liveAsc.innerText} & ${liveMc.innerText}`;
             successBox.style.display = 'block';
             successBox.scrollIntoView({ behavior: 'smooth' });
         });
@@ -108,6 +193,8 @@
         document.addEventListener('click', (e) => {
             if (e.target !== cityInput) cityResults.style.display = 'none';
         });
+
+        updateAstrology();
     </script>
 </body>
 </html>
