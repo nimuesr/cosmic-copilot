@@ -2,65 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cosmic Co-Pilot: Onboarding Suite</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Co-Pilot Onboarding</title>
     <style>
-        :root { --bg: #0d0f14; --card: #161a23; --text: #e2e8f0; --accent: #6366f1; --ping: #10b981; --alert: #f59e0b; }
-        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
-        .box { max-width: 1200px; margin: 0 auto; }
-        .wizard { background: var(--card); border: 1px solid #232936; border-radius: 12px; padding: 25px; max-width: 550px; margin: 40px auto; display: none; }
-        .wizard.active { display: block; }
-        .indicator { color: var(--accent); font-size: 0.8rem; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .f-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px; }
-        input[type="text"], input[type="date"] { background: #0d0f14; border: 1px solid #232936; color: #fff; padding: 10px; border-radius: 6px; }
-        .matrix { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .matrix-item { background: #1e2533; border: 2px solid #232936; padding: 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .matrix-item.selected { border-color: var(--ping); background: #11221a; }
-        .btn-row { display: flex; justify-content: space-between; margin-top: 20px; }
-        button { background: var(--accent); color: #fff; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        button.sec { background: transparent; border: 1px solid #232936; color: #94a3b8; }
-        #dash { display: none; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        @media (max-width: 800px) { #dash { grid-template-columns: 1fr; } }
-        .panel { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #232936; }
-        .slider-box { background: #1e2533; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 15px; }
-        input[type="range"] { width: 100%; accent-color: var(--accent); }
-        .time-display { font-size: 2rem; font-weight: bold; margin: 5px 0; color: #fff; }
-        .event { background: #1e2533; padding: 10px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #334155; }
-        .event.active { border-left-color: var(--ping); background: #182c25; }
-        .badge { background: var(--accent); padding: 2px 4px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; }
-        .out { background: #1e2533; padding: 12px; border-radius: 6px; margin-bottom: 10px; line-height: 1.4; }
-        .highlight { color: var(--ping); font-weight: bold; }
+        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; max-width: 500px; margin: auto; }
+        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #475569; background: #334155; color: white; box-sizing: border-box; }
+        .dropdown-results { background: #334155; border: 1px solid #475569; max-height: 150px; overflow-y: auto; border-radius: 4px; display: none; }
+        .dropdown-item { padding: 10px; cursor: pointer; }
+        .dropdown-item:hover { background: #475569; }
     </style>
 </head>
 <body>
-<div class="box">
 
-    <!-- STEP 1: IDENTITY DETAILS -->
-    <div class="wizard active" id="step1">
-        <div class="indicator">Step 1 of 3</div>
-        <h2>Establish Profile</h2>
-        <div class="f-group"><label>Identity Target Name</label><input type="text" id="wName" value="Ess"></div>
-        <div class="f-group"><label>Birth Date</label><input type="date" id="wDate" value="1983-01-28"></div>
-        <div class="f-group"><label>Location Coordinates</label><input type="text" id="wLoc" value="Roberval, Québec"></div>
-        <div class="btn-row" style="justify-content: flex-end;"><button onclick="go(1, 2)">Next: Milestone Tracks →</button></div>
+    <h1>🌌 Cosmic Co-Pilot</h1>
+    <p>Let's map out a profile to find their hidden rising sign.</p>
+
+    <div class="card">
+        <h3>Step 1: Enter Birth Information</h3>
+        <label>Birth Date</label>
+        <input type="date" id="birthdate">
+
+        <label>Search Birth City</label>
+        <input type="text" id="city-search" placeholder="Type a city (e.g. Roberval, Paris)..." autocomplete="off">
+        <div id="city-results" class="dropdown-results"></div>
     </div>
 
-    <!-- STEP 2: MATRIX SELECTIONS -->
-    <div class="wizard" id="step2">
-        <div class="indicator">Step 2 of 3</div>
-        <h2>Select Evaluated Tracks</h2>
-        <div class="matrix">
-            <div class="matrix-item selected" id="m_injury" onclick="toggleItem('injury')"><strong>Physical Traumas</strong></div>
-            <div class="matrix-item selected" id="m_career" onclick="toggleItem('career')"><strong>Employment Endings</strong></div>
-        </div>
-        <div class="btn-row">
-            <button class="sec" onclick="go(2, 1)">← Back</button>
-            <button onclick="buildStep3()">Next: Input Dates →</button>
-        </div>
-    </div>
+    <script>
+        const cityInput = document.getElementById('city-search');
+        const cityResults = document.getElementById('city-results');
 
-    <!-- STEP 3: MILESTONE DATA INPUTS -->
-    <div class="wizard" id="step3">
-        <div class="indicator">Step 3 of 3</div>
+        // Automatically search cities when typing
+        cityInput.addEventListener('input', async () => {
+            const query = cityInput.value.trim();
+            if (query.length < 3) {
+                cityResults.style.display = 'none';
+                return;
+            }
+
+            // Fetches matching global cities from a public database
+            try {
+                const response = await fetch(`https://geonames.org{query}&maxRows=5&username=demo`);
+                const data = await response.json();
+                
+                cityResults.innerHTML = '';
+                if (data.geonames && data.geonames.length > 0) {
+                    cityResults.style.display = 'block';
+                    data.geonames.forEach(city => {
+                        const div = document.createElement('div');
+                        div.className = 'dropdown-item';
+                        div.innerText = `${city.name}, ${city.adminName1} (${city.countryName})`;
+                        
+                        // When clicked, lock it into the text box
+                        div.addEventListener('click', () => {
+                            cityInput.value = `${city.name}, ${city.adminName1} (${city.countryName})`;
+                            cityResults.style.display = 'none';
+                        });
+                        cityResults.appendChild(div);
+                    });
+                }
+            } catch (err) {
+                console.log("Error loading cities");
+            }
+        });
+    </script>
+</body>
+</html>
         <h2>Configure Timeline Milestones</h2>
         <div id="dynamicInputs"></div>
         <div class="btn-row">
