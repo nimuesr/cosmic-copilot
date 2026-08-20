@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ess' Rectification Sandbox Suite</title>
+    <style>
+        :root { --bg: #0d0f14; --card: #161a23; --text: #e2e8f0; --accent: #6366f1; --ping: #10b981; --alert: #f59e0b; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 20px; margin: 0; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1200px; margin: 20px auto; }
+        .panel { background: var(--card); border-radius: 8px; padding: 20px; border: 1px solid #232936; }
+        .slider-box { background: #1e2533; padding: 15px; border-radius: 6px; text-align: center; margin-bottom: 15px; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); }
+        .time-display { font-size: 2rem; font-weight: bold; margin: 5px 0; }
+        .form-group { display: flex; gap: 10px; margin: 15px 0; }
+        input[type="text"] { background: #0d0f14; border: 1px solid #232936; color: #fff; padding: 8px; border-radius: 4px; flex: 1; }
+        button { background: var(--accent); color: #fff; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .event { background: #1e2533; padding: 10px; border-radius: 4px; margin-bottom: 10px; border-left: 4px solid #334155; }
+        .event.active { border-left-color: var(--ping); background: #182c25; }
+        .badge { background: var(--accent); padding: 2px 4px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; }
+        .output { background: #1e2533; padding: 12px; border-radius: 6px; margin-bottom: 10px; }
+        .highlight { color: var(--ping); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center; margin: 0;">Rectification Sandbox Engine</h1>
+
+    <div class="grid">
+        <!-- LEFT PANEL: CONTROLS & EVENT MANAGER -->
+        <div class="panel">
+            <div class="slider-box">
+                <label style="color:#94a3b8;">Slide to Shift Birth Minutes</label>
+                <input type="range" id="timeSlider" min="150" max="210" value="189">
+                <div class="time-display" id="clockReadout">3:09 PM</div>
+                <div id="lockStatus">🔒 Combination: <span class="highlight">All Systems Locked</span></div>
+            </div>
+
+            <div style="background:#1e2533; padding:12px; border-radius:6px;">
+                <strong style="color:#94a3b8;">+ Inject New Milestone Event (Auto-Saves to Browser)</strong>
+                <div class="form-group">
+                    <input type="text" id="eDate" placeholder="Date (e.g. June 2012)" style="max-width:130px;">
+                    <input type="text" id="eDesc" placeholder="Description of event...">
+                    <button id="addBtn">Add</button>
+                </div>
+                <button id="clearBtn" style="background:#ef4444; width:100%; margin-top:5px; padding:5px;">Clear Custom Saved Events</button>
+            </div>
+
+            <h3 style="color:#94a3b8; margin-top:20px;">Timeline Pings</h3>
+            <div id="timeline">
+                <div class="event active"><span class="badge">April 2019</span> <strong>Broke Knee & Wrist</strong><p style="margin:4px 0 0 0; font-size:0.85rem; color:#94a3b8;">Opposing 1st House Ascendant Line</p></div>
+                <div class="event active"><span class="badge">October 2022</span> <strong>Burnout Medical Leave</strong><p style="margin:4px 0 0 0; font-size:0.85rem; color:#94a3b8;">Conjunction to 5th House Saturn</p></div>
+                <div class="event active"><span class="badge">March 2024</span> <strong>Dog Surgery Crisis ($14k)</strong><p style="margin:4px 0 0 0; font-size:0.85rem; color:#94a3b8;">Pluto Aspecting 6th House Cusps</p></div>
+                <div class="event active"><span class="badge">July 2026</span> <strong>Complicated Job Loss</strong><p style="margin:4px 0 0 0; font-size:0.85rem; color:#94a3b8;">Saturn & Neptune on 10th House MC</p></div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: DYNAMIC ASTROLOGY REALITY -->
+        <div class="panel">
+            <h2>Calculated Framework Layout</h2>
+            <div class="output">
+                <p>Ascendant (Rising Sign): <span id="asc" class="highlight">Cancer 22° 20'</span></p>
+                <p>Midheaven (Career MC): <span id="mc" class="highlight">Pisces 27° 19'</span></p>
+            </div>
+            <div class="output">
+                <strong>Personality Filter:</strong> Aquarius Sun with a Cancer Rising and Leo Moon structure. Chatty and warm when meeting crowds, but intensely introverted. You treat social energy like a battery that requires complete privacy to recharge.
+            </div>
+            <div class="output" style="border-top: 4px solid var(--alert);">
+                <h3>Career Cusp Sign Profile: <span id="title" style="color:var(--alert);">The Shapeshifter</span></h3>
+                <p id="text" style="margin:5px 0 0 0; color:#cbd5e1;">Having Pisces on your career cusp means your path is fluid like a winding river, not a corporate highway. You don't possess a single rigid 'passion' because you adapt to roles dynamically over time.</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const library = {
+            Aries: { t: "The Pioneer", d: "Driven by fast-paced, independent actions, competition, or starting fresh ventures. Needs to call the shots." },
+            Taurus: { t: "The Builder", d: "Seeks stable, lucrative, and tangible career tracks (finance, design, real estate). Highly resistant to unexpected chaos." },
+            Gemini: { t: "The Jack-of-All-Trades", d: "Requires continuous mental variety, writing, or multitasking. Often runs two distinct paths or side-hustles simultaneously." },
+            Cancer: { t: "The Nurturer", d: "Focused on human caretaking, psychology, emotional support, or protective business structures that treat colleagues like family." },
+            Leo: { t: "The Performer", d: "Thrives when explicitly recognized, visible, or placed in a leadership spotlight. Suffocates when hidden away in a cubicle." },
+            Virgo: { t: "The Strategist", d: "Highly analytical, organized, and focused on systematic problem-solving, detailed editing, or healthcare/service mastery." },
+            Libra: { t: "The Diplomat", d: "Centers on high-stakes client relationships, artistic styling, legal mediation, public relations, or design curation." },
+            Scorpio: { t: "The Alchemist", d: "Attracted to deep research, data investigation, crisis management, secrets, or behind-the-scenes psychological power dynamics." },
+            Sagittarius: { t: "The Explorer", d: "Needs continuous freedom, long-distance travel, philosophical publishing, teaching, or a global perspective." },
+            Capricorn: { t: "The Executive", d: "The classic corporate blueprint. Deeply ambitious, focused on structural rules, corporate ladders, and long-term societal status." },
+            Aquarius: { t: "The Humanitarian", d: "Unconventional, community-oriented, or heavy tech tracks (astrology, custom coding, network infrastructure, modern social groups)." },
+            Pisces: { t: "The Shapeshifter", d: "Your true placement! Navigates career fog, intuitive roles, and healing arts. Requires total fluidity over rigid, fixed formatting." }
+        };
+
+        const slider = document.getElementById('timeSlider');
+        const timeline = document.getElementById('timeline');
+
+        function createEventElement(date, desc) {
+            const div = document.createElement('div');
+            div.className = `event custom-event ${parseInt(slider.value) === 189 ? 'active' : ''}`;
+            div.innerHTML = `<span class="badge">${date}</span> <strong>${desc}</strong><p style="margin:4px 0 0 0; font-size:0.85rem; color:#a7f3d0;">Custom Memory Alignment Track active.</p>`;
+            return div;
+        }
+
+        function loadEvents() {
+            const saved = JSON.parse(localStorage.getItem('astroEvents')) || [];
+            saved.forEach(ev => {
+                timeline.appendChild(createEventElement(ev.date, ev.desc));
+            });
+        }
+
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            const events = document.querySelectorAll('.event');
+            
+            if (val === 189) {
+                document.getElementById('clockReadout').innerText = "3:09 PM";
+                document.getElementById('asc').innerText = "Cancer 22° 20'";
+                document.getElementById('mc').innerText = "Pisces 27° 19'";
+                document.getElementById('title').innerText = library.Pisces.t;
+                document.getElementById('text').innerText = library.Pisces.d;
+                document.getElementById('lockStatus').innerHTML = "🔒 Combination: <span class='highlight'>All Systems Locked</span>";
+                events.forEach(el => el.classList.add('active'));
+            } else {
+                const h = Math.floor(val / 60) + 1; const m = val % 60;
+                document.getElementById('clockReadout').innerText = `${h}:${m < 10 ? '0'+m : m} PM`;
+                document.getElementById('lockStatus').innerHTML = "🔓 Combination: <span style='color:#ef4444;'>Uncalibrated (Math Broken)</span>";
+                events.forEach(el => el.classList.remove('active'));
+
+                if (val < 160) {
+                    document.getElementById('asc').innerText = "Gemini 14° 02'"; document.getElementById('mc').innerText = "Aquarius 11° 44'";
+                    document.getElementById('title').innerText = library.Aquarius.t; document.getElementById('text').innerText = library.Aquarius.d;
+                } else if (val >= 160 && val < 170) {
+                    document.getElementById('asc').innerText = "Gemini 28° 15'"; document.getElementById('mc').innerText = "Pisces 02° 10'";
+                    document.getElementById('title').innerText = library.Pisces.t; document.getElementById('text').innerText = library.Pisces.d;
+                } else if (val >= 170 && val < 185) {
+                    document.getElementById('asc').innerText = "Cancer 04° 12'"; document.getElementById('mc').innerText = "Aries 05° 30'";
+                    document.getElementById('title').innerText = library.Aries.t; document.getElementById('text').innerText = library.Aries.d;
+                } else if (val >= 185 && val < 189) {
+                    document.getElementById('asc').innerText = "Cancer 18° 40'"; document.getElementById('mc').innerText = "Taurus 19° 12'";
+                    document.getElementById('title').innerText = library.Taurus.t; document.getElementById('text').innerText = library.Taurus.d;
+                } else if (val > 189 && val < 200) {
+                    document.getElementById('asc').innerText = "Leo 05° 11'"; document.getElementById('mc').innerText = "Gemini 01° 45'";
+                    document.getElementById('title').innerText = library.Gemini.t; document.getElementById('text').innerText = library.Gemini.d;
+                } else {
+                    document.getElementById('asc').innerText = "Leo 19° 55'"; document.getElementById('mc').innerText = "Cancer 14° 22'";
+                    document.getElementById('title').innerText = library.Cancer.t; document.getElementById('text').innerText = library.Cancer.d;
+                }
+            }
+        });
+
+        document.getElementById('addBtn').addEventListener('click', () => {
+            const date = document.getElementById('eDate').value.trim();
+            const desc = document.getElementById('eDesc').value.trim();
+            if(!date || !desc) return alert("Please fill both text boxes!");
+            
+            timeline.appendChild(createEventElement(date, desc));
+            
+            const saved = JSON.parse(localStorage.getItem('astroEvents')) || [];
+            saved.push({ date, desc });
+            localStorage.setItem('astroEvents', JSON.stringify(saved));
+            
+            document.getElementById('eDate').value = ""; document.getElementById('eDesc').value = "";
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            localStorage.removeItem('astroEvents');
+            document.querySelectorAll('.custom-event').forEach(el => el.remove());
+        });
+
+        loadEvents();
+    </script>
+</body>
+</html>
