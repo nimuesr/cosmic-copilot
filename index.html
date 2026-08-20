@@ -5,106 +5,175 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Co-Pilot Rectification Suite</title>
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; max-width: 600px; margin: auto; }
-        .card { background: #1e293b; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        h1, h3 { color: #6366f1; margin-top: 0; }
-        label { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 5px; color: #cbd5e1; }
-        input, select { width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #475569; background: #334155; color: white; box-sizing: border-box; }
+        /* Editorial Typography & Layout Framework */
+        body { 
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: #fdfbf7; 
+            color: #2e2625; 
+            padding: 40px 20px; 
+            margin: 0;
+        }
+        h1, h2, h3, h4 { 
+            font-family: 'Georgia', 'Times New Roman', serif; 
+            color: #231f20; 
+            margin-top: 0;
+            font-weight: normal;
+        }
+        h1 { font-size: 2.2rem; border-bottom: 1px solid #eaddd3; padding-bottom: 15px; margin-bottom: 30px; }
         
-        .dropdown-results { background: #334155; border: 1px solid #475569; max-height: 150px; overflow-y: auto; border-radius: 4px; display: none; position: absolute; width: calc(100% - 40px); z-index: 10; }
-        .dropdown-item { padding: 10px; cursor: pointer; border-bottom: 1px solid #475569; font-size: 14px; }
-        .dropdown-item:hover { background: #475569; }
-        
-        .slider-container { background: #334155; padding: 15px; border-radius: 6px; margin: 15px 0; border: 1px solid #475569; }
-        .time-display { font-size: 24px; font-weight: bold; text-align: center; color: #38bdf8; margin-bottom: 10px; font-family: monospace; }
-        input[type="range"] { -webkit-appearance: none; width: 100%; background: #475569; height: 8px; border-radius: 4px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #6366f1; cursor: pointer; }
-        
-        .live-framework { display: flex; justify-content: space-around; background: #020617; padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid #38bdf8; }
-        .framework-item { text-align: center; }
-        .framework-value { font-size: 18px; font-weight: bold; color: #f43f5e; }
+        /* Two-Column Responsive Grid Layout */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            max-width: 1100px;
+            margin: auto;
+        }
+        @media(min-width: 850px) {
+            .workspace-grid { grid-template-columns: 380px 1fr; }
+        }
 
-        .milestone-row { display: flex; gap: 10px; margin-bottom: 8px; }
-        .milestone-list { margin-top: 10px; background: #020617; padding: 10px; border-radius: 6px; font-size: 14px; }
+        /* Clean White Cards with Soft Rounded Corners */
+        .card { 
+            background: #ffffff; 
+            padding: 25px; 
+            border-radius: 16px; 
+            border: 1px solid #ebdcd0;
+            box-shadow: 0 4px 20px rgba(35, 31, 32, 0.02);
+            margin-bottom: 25px;
+            box-sizing: border-box;
+        }
         
-        .btn { width: 100%; background: #6366f1; color: white; border: none; padding: 12px; margin-top: 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
-        .btn:hover { background: #4f46e5; }
-        .btn-add { width: auto; background: #3b82f6; padding: 10px 15px; margin: 0; }
+        /* Editorial Styling Inputs */
+        label { font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; display: block; margin-top: 15px; margin-bottom: 5px; color: #706361; }
+        input, select { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ebdcd0; background: #faf8f5; color: #2e2625; box-sizing: border-box; font-size: 15px; }
+        input:focus { outline: none; border-color: #c597a1; background: #ffffff; }
         
-        .success-card { background: #047857; color: white; padding: 20px; border-radius: 8px; margin-top: 20px; display: none; }
+        /* City Dropdown Checklists */
+        .dropdown-results { background: #ffffff; border: 1px solid #ebdcd0; max-height: 150px; overflow-y: auto; border-radius: 6px; display: none; position: absolute; width: calc(100% - 50px); z-index: 10; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .dropdown-item { padding: 12px; cursor: pointer; border-bottom: 1px solid #faf8f5; font-size: 14px; }
+        .dropdown-item:hover { background: #faf8f5; color: #c597a1; }
+        
+        /* Elegant Time Slider Controls */
+        .slider-container { background: #faf8f5; padding: 20px; border-radius: 10px; margin: 15px 0; border: 1px solid #ebdcd0; }
+        .time-display { font-size: 26px; text-align: center; color: #c597a1; margin-bottom: 12px; font-family: 'Georgia', serif; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; background: #ebdcd0; height: 4px; border-radius: 2px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #c597a1; cursor: pointer; transition: 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+        
+        /* Live Framework Indicators */
+        .live-framework { display: flex; justify-content: space-around; background: #faf8f5; padding: 15px; border-radius: 10px; margin-top: 15px; border-top: 2px solid #eaddd3; }
+        .framework-item { text-align: center; }
+        .framework-value { font-size: 18px; font-family: 'Georgia', serif; font-style: italic; color: #231f20; margin-top: 4px; }
+
+        /* Milestone Builder Matrix */
+        .milestone-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .milestone-list { margin-top: 15px; background: #faf8f5; padding: 15px; border-radius: 10px; font-size: 14px; border: 1px dashed #ebdcd0; }
+        .milestone-item { padding: 8px 0; border-bottom: 1px solid #ebdcd0; color: #504645; }
+        .milestone-item:last-child { border-bottom: none; }
+        
+        /* Premium Buttons - Vintage Dusty Rose Accent */
+        .btn { width: 100%; background: #c597a1; color: white; border: none; padding: 14px; margin-top: 15px; border-radius: 6px; font-family: 'Georgia', serif; font-size: 16px; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #b3828d; }
+        .btn-add { width: auto; background: #231f20; padding: 0 20px; margin: 0; }
+        .btn-add:hover { background: #423b3c; }
+        
+        /* Final Celebration Archive Panel */
+        .success-card { background: #faf8f5; border: 2px solid #c597a1; color: #2e2625; padding: 25px; border-radius: 16px; margin-top: 25px; display: none; }
+        .success-card h3 { color: #b3828d; }
     </style>
 </head>
 <body>
 
-    <h1>🌌 Cosmic Co-Pilot Rectification Suite</h1>
-    <p>Calibrate birth timelines and unlock secret Rising Signs.</p>
-
-    <div class="card" style="position: relative;">
-        <h3>Step 1: Target Identity & Location</h3>
-        <label>Profile Name</label>
-        <input type="text" id="profile-name" placeholder="e.g. My Secret Ex, Bestie, Lady Gaga">
-
-        <label>Birth Date</label>
-        <input type="date" id="birthdate">
-
-        <label>Search Birth City</label>
-        <input type="text" id="city-search" placeholder="Type city (e.g. Roberval, Paris, Montreal)..." autocomplete="off">
-        <div id="city-results" class="dropdown-results"></div>
+    <div style="max-width: 1100px; margin: auto;">
+        <h1>🌌 Cosmic Co-Pilot Rectification Suite</h1>
     </div>
 
-    <div class="card">
-        <h3>Step 2: Birth Time Slider Calibration</h3>
-        <p style="font-size: 14px; color: #94a3b8;">Slide the bar to shift through the day. Watch how the Rising Sign shifts live depending on the clock coordinates!</p>
+    <div class="workspace-grid">
         
-        <div class="slider-container">
-            <div class="time-display" id="time-text">12:00 PM</div>
-            <input type="range" id="time-slider" min="0" max="1439" value="720">
-        </div>
+        <!-- LEFT COLUMN: SIDEBAR CONFIGURATION MENU -->
+        <div class="sidebar-controls">
+            <div class="card" style="position: relative;">
+                <h3>Profile Configuration</h3>
+                
+                <label>Name / Identity</label>
+                <input type="text" id="profile-name" placeholder="Ex Name, Bestie, Celebrity...">
 
-        <div class="live-framework">
-            <div class="framework-item">
-                <div style="font-size: 12px; color: #94a3b8;">LIVETIME ASCENDANT</div>
-                <div class="framework-value" id="live-asc">Scorpio Rising</div>
+                <label>Birth Date</label>
+                <input type="date" id="birthdate">
+
+                <label>Birth City Location</label>
+                <input type="text" id="city-search" placeholder="Search curated database..." autocomplete="off">
+                <div id="city-results" class="dropdown-results"></div>
             </div>
-            <div class="framework-item">
-                <div style="font-size: 12px; color: #94a3b8;">MIDHEAVEN (MC)</div>
-                <div class="framework-value" id="live-mc">Leo MC</div>
+
+            <div class="card">
+                <h3>Time Adjuster</h3>
+                <p style="font-size: 13px; color: #706361; line-height: 1.5;">Scroll the sliding bar across the coordinates of the day to recalibrate live zodiac boundaries.</p>
+                
+                <div class="slider-container">
+                    <div class="time-display" id="time-text">12:00 PM</div>
+                    <input type="range" id="time-slider" min="0" max="1439" value="720">
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="card">
-        <h3>Step 3: Life Milestone Verification Matrix</h3>
-        <p style="font-size: 14px; color: #94a3b8;">Add critical historical timelines (breakups, job losses, moves) to test calibration locks.</p>
-        
-        <div class="milestone-row">
-            <input type="text" id="milestone-title" placeholder="Event (e.g. Broken Leg, Left Job)" style="margin:0;">
-            <input type="month" id="milestone-date" style="margin:0; width: 60%;">
-            <button class="btn btn-add" id="add-milestone-btn">Add +</button>
+        <!-- RIGHT COLUMN: MAIN WORKSPACE OUTPUT PANELS -->
+        <div class="main-workspace">
+            
+            <div class="card">
+                <h3>Live Calculated Coordinate Framework</h3>
+                <p style="font-size: 13px; color: #706361; margin-bottom: 20px;">Real-time adjustments reflecting regional position changes:</p>
+                
+                <div class="live-framework">
+                    <div class="framework-item">
+                        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #706361;">Ascendant (Rising Sign)</div>
+                        <div class="framework-value" id="live-asc">Scorpio Rising</div>
+                    </div>
+                    <div class="framework-item">
+                        <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #706361;">Midheaven Axis (MC)</div>
+                        <div class="framework-value" id="live-mc">Leo MC</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Biographical Milestone Verification Matrix</h3>
+                <p style="font-size: 13px; color: #706361; line-height: 1.5;">Record major life transitions to lock alignment validation boundaries.</p>
+                
+                <div class="milestone-row">
+                    <input type="text" id="milestone-title" placeholder="Event (e.g. Moved House, Breakup)" style="margin:0;">
+                    <input type="month" id="milestone-date" style="margin:0; width: 65%;">
+                    <button class="btn btn-add" id="add-milestone-btn">Add +</button>
+                </div>
+
+                <div class="milestone-list" id="milestone-display-list">
+                    <span style="color: #a39592; font-style: italic;">No verification milestones logged yet.</span>
+                </div>
+
+                <button class="btn" id="submit-btn">Lock Matrix Coordinates & Verify →</button>
+            </div>
+
+            <!-- RESULT LOCK ARTIFACT -->
+            <div class="success-card" id="success-box">
+                <h3>✨ Alignment Validated</h3>
+                <p>The biographical tracking timelines match perfectly with the selected coordinate chart framework.</p>
+                <p><strong>Final Parameters Loaded for <span id="final-name" style="color:#b3828d;">Profile</span>:</strong></p>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 15px;">
+                    <tr style="border-bottom: 1px solid #ebdcd0;"><td style="padding: 10px 0; font-weight: bold;">Calibrated Time:</td><td id="final-time" style="color: #b3828d; text-align: right;">12:00 PM</td></tr>
+                    <tr><td style="padding: 10px 0; font-weight: bold;">Zodiac Framework:</td><td id="final-coords" style="color: #b3828d; text-align: right;">Scorpio Rising</td></tr>
+                </table>
+            </div>
+
         </div>
-
-        <div class="milestone-list" id="milestone-display-list">
-            <span style="color: #64748b;">No verification milestones added yet.</span>
-        </div>
-
-        <button class="btn" id="submit-btn">Lock Coordinates & Compute Rectification →</button>
-    </div>
-
-    <div class="success-card" id="success-box">
-        <h3>✨ Rectification Matrix Validated!</h3>
-        <p>The cosmic timeline calculation has successfully locked the charts. The verified structural configurations have been synchronized to local memory storage.</p>
-        <p><strong>Final Solution Package for <span id="final-name">Profile</span>:</strong></p>
-        <ul>
-            <li>Validated Birth Time: <span id="final-time" style="font-weight: bold; color: #38bdf8;">12:00 PM</span></li>
-            <li>Rectified Coordinates: <span id="final-coords" style="font-weight: bold; color: #f43f5e;">Scorpio Rising</span></li>
-        </ul>
-        <p>💾 <em>Local state data updated. Premium PDF exporter capability armed.</em></p>
     </div>
 
     <script>
+        // Localized City Vault (No external data blocks allowed!)
         const nativeCities = [
             { display_name: "Roberval, Le Domaine-du-Roy, Quebec, Canada", signs: ["Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini"] },
             { display_name: "Montreal, Region de Montreal, Quebec, Canada", signs: ["Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo"] },
+            { display_name: "Quebec City, Capitale-Nationale, Quebec, Canada", signs: ["Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo"] },
             { display_name: "Paris, Île-de-France, France", signs: ["Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius"] },
             { display_name: "London, Greater London, England, United Kingdom", signs: ["Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn"] },
             { display_name: "New York City, New York, United States", signs: ["Leo", "Virgo", "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces", "Aries", "Taurus", "Gemini", "Cancer"] },
@@ -128,6 +197,7 @@
 
         let milestones = [];
 
+        // Internal dropdown lookup logic
         cityInput.addEventListener('input', () => {
             const query = cityInput.value.toLowerCase().trim();
             if (query.length < 2) { cityResults.style.display = 'none'; return; }
@@ -149,6 +219,7 @@
             } else { cityResults.style.display = 'none'; }
         });
 
+        // Interactive Live Slider Computations
         function updateAstrology() {
             const minutes = parseInt(timeSlider.value);
             const hours24 = Math.floor(minutes / 60);
@@ -158,32 +229,36 @@
             const displayTime = `${hours12}:${mins.toString().padStart(2, '0')} ${ampm}`;
             timeText.innerText = displayTime;
 
-            const cityObj = nativeCities.find(c => c.display_name === cityInput.value) || nativeCities[0];
+            const cityObj = nativeCities.find(c => c.display_name === cityInput.value) || nativeCities;
             const segment = Math.floor(minutes / 120) % 12;
             
-            const currentAsc = cityObj.signs[segment] + " Rising";
-            const currentMc = cityObj.signs[(segment + 3) % 12] + " MC";
-
-            liveAsc.innerText = currentAsc;
-            liveMc.innerText = currentMc;
+            liveAsc.innerText = cityObj.signs[segment] + " Rising";
+            liveMc.innerText = cityObj.signs[(segment + 3) % 12] + " MC";
         }
 
         timeSlider.addEventListener('input', updateAstrology);
 
+        // Milestone Array Injection Engine
         addMilestoneBtn.addEventListener('click', () => {
             if (!milestoneTitle.value || !milestoneDate.value) return;
-            milestones.push(`${milestoneTitle.value} (${milestoneDate.value})`);
-            milestoneDisplayList.innerHTML = milestones.map(m => `<div>🔹 ${m}</div>`).join('');
+            // Cleans up the date display string elegantly
+            const [year, month] = milestoneDate.value.split('-');
+            const dateObj = new Date(year, month - 1);
+            const monthName = dateObj.toLocaleString('default', { month: 'long' });
+            
+            milestones.push(`${milestoneTitle.value} (${monthName} ${year})`);
+            milestoneDisplayList.innerHTML = milestones.map(m => `<div class="milestone-item">✨ ${m}</div>`).join('');
             milestoneTitle.value = '';
             milestoneDate.value = '';
         });
 
+        // Click submission verification panel trigger
         submitBtn.addEventListener('click', () => {
             if (!cityInput.value || !document.getElementById('birthdate').value) {
-                alert("Please declare a target profile birthdate and city vector coordinates first!");
+                alert("Please declare both a chart date and city coordinate alignment before compiling.");
                 return;
             }
-            document.getElementById('final-name').innerText = document.getElementById('profile-name').value || "The Mystery Profile";
+            document.getElementById('final-name').innerText = document.getElementById('profile-name').value || "The Mystery Subject";
             document.getElementById('final-time').innerText = timeText.innerText;
             document.getElementById('final-coords').innerText = `${liveAsc.innerText} & ${liveMc.innerText}`;
             successBox.style.display = 'block';
